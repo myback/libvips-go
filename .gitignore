@@ -1,1 +1,8 @@
+.idea/
+.vscode/
+
+.DS_Store
+.swp*
+*.log
+
 ./bin/

@@ -446,6 +446,8 @@ func (img *VipsImage) Strip() error {
 	return nil
 }
 
+// VipsJpeg: out of order read at line XXXX
+// https://github.com/libvips/libvips/issues/639#issuecomment-294513915
 func (img *VipsImage) SmartCrop(w, h int) error {
 	var tmp *C.VipsImage
 	if C.vips_smartcrop_go(img.img, &tmp, C.int(w), C.int(h)) != 0 {
