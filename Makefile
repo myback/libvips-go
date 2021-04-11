@@ -8,9 +8,6 @@ endif
 .PHONY: build test
 default: build
 
-build:
-	$(ENV) go build .
-
 test:
 	$(ENV) go test .
 
