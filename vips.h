@@ -82,5 +82,8 @@ int vips_tiffsave_go(VipsImage *in, void **buf, size_t *len, int quality);
 int vips_avifsave_go(VipsImage *in, void **buf, size_t *len, int quality);
 int vips_heifsave_go(VipsImage *in, void **buf, size_t *len, int quality, int compression, int lossless);
 int vips_bmpsave_go(VipsImage *in, void **buf, size_t *len);
+int vips_pdfsave_go(VipsImage *in, void **buf, size_t *len);
 
 int vips_resize_with_premultiply_go(VipsImage *in, VipsImage **out, double scale);
+
+int vips_arrayjoin_go(VipsImage **in, VipsImage **out, int n);

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	vips "github.com/myback/libvips-go"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	vips "github.com/myback/libvips-go"
 )
 
 func checkErr(e error) {
@@ -16,6 +17,8 @@ func checkErr(e error) {
 }
 
 func main() {
+	defer vips.Shutdown()
+
 	if len(os.Args) < 3 {
 		fmt.Printf("Usage: %s path/to/image/file.jpg png\n", os.Args[0])
 		os.Exit(1)
@@ -27,7 +30,6 @@ func main() {
 	vipsImage, err := vips.Load(b)
 	checkErr(err)
 	defer vipsImage.Clear()
-	defer vips.Shutdown()
 
 	imageSaveOptions := vips.DefaultEncodeConfig
 	imageSaveOptions.Lossless(false)

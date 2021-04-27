@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	vips "github.com/myback/libvips-go"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	vips "github.com/myback/libvips-go"
 )
 
 func checkErr(e error) {
@@ -18,6 +19,8 @@ func checkErr(e error) {
 }
 
 func main() {
+	defer vips.Shutdown()
+
 	if len(os.Args) < 3 {
 		fmt.Printf("Usage: %s path/to/image/file.jpg path/to/image/watermark.jpg [ WmarkWxWmarkH gravity ]\n", os.Args[0])
 		os.Exit(1)
@@ -36,7 +39,6 @@ func main() {
 	vipsWmImage, err := vips.Load(wm)
 	checkErr(err)
 	defer vipsWmImage.Clear()
-	defer vips.Shutdown()
 
 	gravity := vips.GravityTopLeft
 	wmW := vipsWmImage.Width()

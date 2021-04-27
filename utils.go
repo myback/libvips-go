@@ -34,6 +34,7 @@ import "C"
 import (
 	"fmt"
 	"image"
+	"io/ioutil"
 	"unsafe"
 )
 
@@ -116,7 +117,16 @@ func Load(buf []byte) (*VipsImage, error) {
 	return img, nil
 }
 
-func LoadPDFPages(buf []byte, page, n int) (*VipsImage, error) {
+func LoadFromFile(file string) (*VipsImage, error) {
+	b, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, err
+	}
+
+	return Load(b)
+}
+
+func LoadPDFPages(buf []byte, page, num int) (*VipsImage, error) {
 	imgType := FormatByMagicNumber(buf)
 	if imgType != PDF {
 		return nil, ErrInvalidFileFormat
@@ -126,7 +136,7 @@ func LoadPDFPages(buf []byte, page, n int) (*VipsImage, error) {
 
 	err := C.int(0)
 
-	if err = C.vips_pdf_load_go(unsafe.Pointer(&buf[0]), C.size_t(len(buf)), &img.img, C.int(page), C.int(n)); err != 0 {
+	if err = C.vips_pdf_load_go(unsafe.Pointer(&buf[0]), C.size_t(len(buf)), &img.img, C.int(page), C.int(num)); err != 0 {
 		return nil, vipsError()
 	}
 
@@ -147,6 +157,31 @@ func LoadFromImage(data image.Image) *VipsImage {
 
 	return &VipsImage{
 		img: C.vips_image_new_from_bytes_go(unsafe.Pointer(&imgData[0]), C.size_t(imgSize), C.int(bounds.Dx()), C.int(bounds.Dy())),
+	}
+}
+
+func Join(in []*VipsImage) (*VipsImage, error) {
+	var tmp *C.VipsImage
+
+	arr := make([]*C.VipsImage, len(in))
+	for i, im := range in {
+		arr[i] = im.img
+	}
+
+	if C.vips_arrayjoin_go(&arr[0], &tmp, C.int(len(arr))) != 0 {
+		return nil, vipsError()
+	}
+
+	return &VipsImage{tmp}, nil
+}
+
+func Pixel() *VipsImage {
+	imgSize := 4
+
+	imgData := make([]byte, 0, imgSize)
+	imgData = append(imgData, 255, 255, 255, 255)
+	return &VipsImage{
+		img: C.vips_image_new_from_bytes_go(unsafe.Pointer(&imgData[0]), C.size_t(imgSize), C.int(1), C.int(1)),
 	}
 }
 

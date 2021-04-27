@@ -57,7 +57,7 @@ int vips_image_load_go(void *buf, size_t len, int imgFmt, VipsImage **out) {
 }
 
 int vips_pdf_load_go(void *buf, size_t len, VipsImage **out, int page, int n) {
-    if (page <= 0) {
+    if (page < 1) {
         page = 0;
     }
 
@@ -309,10 +309,6 @@ int vips_webpsave_go(VipsImage *in, void **buf, size_t *len, int quality, int st
     return vips_webpsave_buffer(in, buf, len, "strip", strip, "Q", quality, "lossless", lossless, NULL);
 }
 
-int vips_gifsave_go(VipsImage *in, void **buf, size_t *len) {
-    return vips_magicksave_buffer(in, buf, len, "format", "gif", NULL);
-}
-
 int vips_tiffsave_go(VipsImage *in, void **buf, size_t *len, int quality) {
     return vips_tiffsave_buffer(in, buf, len, "Q", quality, NULL);
 }
@@ -325,9 +321,19 @@ int vips_heifsave_go(VipsImage *in, void **buf, size_t *len, int quality, int co
     return vips_heifsave_buffer(in, buf, len, "Q", quality, "compression", compression, "lossless", lossless, NULL);
 }
 
+// Used by image magic
+int vips_gifsave_go(VipsImage *in, void **buf, size_t *len) {
+    return vips_magicksave_buffer(in, buf, len, "format", "gif", NULL);
+}
+
 int vips_bmpsave_go(VipsImage *in, void **buf, size_t *len) {
     return vips_magicksave_buffer(in, buf, len, "format", "bmp", NULL);
 }
+
+int vips_pdfsave_go(VipsImage *in, void **buf, size_t *len) {
+    return vips_magicksave_buffer(in, buf, len, "format", "pdf", NULL);
+}
+// End
 
 int vips_resize_with_premultiply_go(VipsImage *in, VipsImage **out, double scale) {
 	VipsBandFormat format;
@@ -358,4 +364,8 @@ int vips_resize_with_premultiply_go(VipsImage *in, VipsImage **out, double scale
     clear_image_go(&tmp1);
 
     return 0;
+}
+
+int vips_arrayjoin_go(VipsImage **in, VipsImage **out, int n) {
+    return vips_arrayjoin(in, out, n, "across", 1, NULL);
 }

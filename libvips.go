@@ -183,6 +183,10 @@ func (img *VipsImage) Save(imgType ImageFormat, opts encodeConfig) ([]byte, erro
 		err = C.vips_avifsave_go(img.img, &ptr, &imgSize, opts.quality)
 	case HEIF:
 		err = C.vips_heifsave_go(img.img, &ptr, &imgSize, opts.quality, opts.heifCompression, opts.lossless)
+	case BMP:
+		err = C.vips_bmpsave_go(img.img, &ptr, &imgSize)
+	case PDF:
+		err = C.vips_pdfsave_go(img.img, &ptr, &imgSize)
 	default:
 		return nil, ErrUnsupportedImageFormat
 	}
@@ -468,4 +472,8 @@ func (img *VipsImage) Crop(dstW, dstH int, pt image.Point) error {
 	C.swap_and_clear_go(&img.img, tmp)
 
 	return nil
+}
+
+func (img *VipsImage) SetInt(key string, val int) {
+	C.vips_image_set_int(img.img, C.CString(key), C.int(val))
 }
