@@ -18,15 +18,13 @@ func checkErr(e error) {
 func main() {
 	defer vips.Shutdown()
 
-	vipsImage1, err := vips.LoadFromFile(".test/wiki_a4.png")
-	checkErr(err)
-
-	vipsImage2, err := vips.LoadFromFile(".test/wiki_a4.png")
-	checkErr(err)
-
 	var arrVips []*vips.VipsImage
-	arrVips = append(arrVips, vipsImage1)
-	arrVips = append(arrVips, vipsImage2)
+	for i := 1; i <= 3; i++ {
+		i, err := vips.LoadFromFile(".test/wiki_a4.png")
+		checkErr(err)
+
+		arrVips = append(arrVips, i)
+	}
 
 	defer func() {
 		for _, img := range arrVips {
