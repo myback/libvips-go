@@ -84,19 +84,19 @@ func (gr *Gravity) UnmarshalText(val []byte) error {
 	switch strings.ToLower(txt) {
 	case "tl", "lt", "":
 		*gr = GravityTopLeft
-	case "t", "tc", "ct":
+	case "t", "tc", "ct", "top":
 		*gr = GravityTop
 	case "tr", "rt":
 		*gr = GravityTopRight
-	case "l", "cl", "lc":
+	case "l", "cl", "lc", "left":
 		*gr = GravityLeft
-	case "c", "cc":
+	case "c", "cc", "center":
 		*gr = GravityCenter
-	case "r", "cr", "rc":
+	case "r", "cr", "rc", "right":
 		*gr = GravityRight
 	case "bl", "lb":
 		*gr = GravityBottomLeft
-	case "b", "bc", "cb":
+	case "b", "bc", "cb", "bottom":
 		*gr = GravityBottom
 	case "br", "rb":
 		*gr = GravityBottomRight

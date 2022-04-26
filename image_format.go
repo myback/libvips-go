@@ -137,7 +137,7 @@ func (imgFmt *ImageFormat) UnmarshalText(val []byte) error {
 	case "webp":
 		*imgFmt = WEBP
 	default:
-		*imgFmt = Unknown
+		return fmt.Errorf("unknown format %s", val)
 	}
 
 	return nil
